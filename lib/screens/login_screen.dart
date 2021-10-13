@@ -1,7 +1,11 @@
 // import 'package:flutter/cupertino.dart';
+// ignore_for_file: avoid_print
+
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:login_final/network_utils/api.dart';
 import 'package:login_final/utilities/constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,6 +17,31 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
+  String email = "", password = "";
+
+  void login() async {
+    var data = {'email': email, 'password': password};
+
+    var res = await Network().authData(data, '/login');
+    var body = json.decode(res.body);
+
+    print(body);
+    if (body['status'] == 1) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Login Berhasil")));
+    } else {
+      var pesanError = "";
+      if (body['reason'] != null) {
+        pesanError = body['reason'];
+      } else {
+        pesanError = "Gagal Login";
+      }
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(pesanError)));
+    }
+  }
+
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+            onChanged: (value) => email = value,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
@@ -60,6 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+            onChanged: (value) => password = value,
             obscureText: true,
             style: TextStyle(
               color: Colors.white,
@@ -125,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () => login(),
         padding: EdgeInsets.all(15.0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
