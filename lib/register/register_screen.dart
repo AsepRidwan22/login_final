@@ -8,33 +8,38 @@ import 'package:flutter/material.dart';
 import 'package:login_final/network_utils/api.dart';
 import 'package:login_final/utilities/constants.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  bool _rememberMe = false;
-  String email = "", password = "";
+class _RegisterScreenState extends State<RegisterScreen> {
+  String email = "", password = "", role = "", name = "", image = "";
 
-  void login() async {
-    var data = {'email': email, 'password': password};
+  void register() async {
+    var data = {
+      'email': email,
+      'password': password,
+      'role': role,
+      'name': name,
+      'image': image
+    };
 
-    var res = await Network().authData(data, '/login');
+    var res = await Network().authData(data, '/register');
     var body = json.decode(res.body);
 
     print(body);
     if (body['status'] == 1) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Login Berhasil")));
+          .showSnackBar(const SnackBar(content: Text("Register Berhasil")));
     } else {
       var pesanError = "";
       if (body['reason'] != null) {
         pesanError = body['reason'];
       } else {
-        pesanError = "Gagal Login";
+        pesanError = "Gagal Register";
       }
 
       ScaffoldMessenger.of(context)
@@ -109,150 +114,121 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildForgotPasswordbtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: FlatButton(
-        onPressed: () => print('forgot password button pressed'),
-        padding: EdgeInsets.only(right: 0.0),
-        child: Text(
-          'forgot password',
+  Widget _buildRoleTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Role',
           style: kLabelStyle,
         ),
-      ),
-    );
-  }
-
-  Widget _buildRememberMeCheckBox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value!;
-                });
-              },
+        SizedBox(
+          height: 10.0,
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            onChanged: (value) => role = value,
+            keyboardType: TextInputType.emailAddress,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(Icons.email, color: Colors.white),
+              hintText: 'Enter Your Email',
+              hintStyle: kHintTextStyle,
             ),
           ),
-          Text(
-            'Remember Me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildLoginBtn() {
+  Widget _buildNameTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Name',
+          style: kLabelStyle,
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            onChanged: (value) => name = value,
+            keyboardType: TextInputType.emailAddress,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(Icons.email, color: Colors.white),
+              hintText: 'Enter Your Name',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Image',
+          style: kLabelStyle,
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            onChanged: (value) => image = value,
+            keyboardType: TextInputType.emailAddress,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(Icons.email, color: Colors.white),
+              hintText: 'Enter Your Image',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegisterBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => login(),
+        onPressed: () => register(),
         padding: EdgeInsets.all(15.0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         color: Colors.white,
         child: Text(
-          'LOGIN',
+          'REGISTER',
           style: TextStyle(
               color: Color(0xFF527DAA),
               letterSpacing: 1.5,
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
               fontFamily: 'OpenSans'),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSignInText() {
-    return Column(
-      children: <Widget>[
-        Text(
-          '- OR -',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
-        Text(
-          'Sign in with',
-          style: kLabelStyle,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialBtn(onTap, logo) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 60.0,
-        width: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black26, offset: Offset(0, 2), blurRadius: 6.0),
-          ],
-          image: DecorationImage(
-            image: logo,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSocialBtnRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(
-            () => print('Login With facebook'),
-            AssetImage('assets/logos/facebook.jpg'),
-          ),
-          _buildSocialBtn(
-            () => print('Login With Google'),
-            AssetImage('assets/logos/google.jpg'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSignUpBtn() {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed('/register'),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: 'Don\'t have an acount',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400),
-            ),
-            TextSpan(
-              text: ' Sign Up',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold),
-            ),
-          ],
         ),
       ),
     );
@@ -286,7 +262,7 @@ class _LoginScreenState extends State<LoginScreen> {
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(
                 horizontal: 40.0,
-                vertical: 120.0,
+                vertical: 60.0,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -300,19 +276,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 30.0,
+                    height: 20.0,
                   ),
                   _buildEmailTF(),
                   SizedBox(
-                    height: 30.0,
+                    height: 20.0,
                   ),
                   _buildPasswordTF(),
-                  _buildForgotPasswordbtn(),
-                  _buildRememberMeCheckBox(),
-                  _buildLoginBtn(),
-                  _buildSignInText(),
-                  _buildSocialBtnRow(),
-                  _buildSignUpBtn(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  _buildRoleTF(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  _buildNameTF(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  _buildImageTF(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  _buildRegisterBtn()
                 ],
               ),
             ),

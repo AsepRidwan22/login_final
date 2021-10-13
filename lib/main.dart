@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_final/screens/login_screen.dart';
+import 'package:login_final/register/register_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +11,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Login UI',
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      routes: {
+        '/': (BuildContext _) => LoginScreen(),
+        '/register': (BuildContext _) => RegisterScreen(),
+      },
+      // home: LoginScreen(),
+      initialRoute: '/',
     );
   }
 }
