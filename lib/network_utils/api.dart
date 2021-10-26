@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 class Network {
   final String _url = 'http://10.0.2.2:7777/api';
+  // 'http://localhost:7777/api/';
 
   authData(data, apiUrl) async {
     var fullUrl = _url + apiUrl;

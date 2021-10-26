@@ -37,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else {
       var pesanError = "";
       if (body['reason'] != null) {
-        pesanError = body['reason'];
+        pesanError = body['reason'][0];
       } else {
         pesanError = "Gagal Register";
       }

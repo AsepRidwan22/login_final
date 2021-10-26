@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:login_final/network_utils/api.dart';
 import 'package:login_final/utilities/constants.dart';
+import 'package:login_final/menu/menu_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,18 +18,20 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
-  String email = "", password = "";
+  String email = "", password = "", id = "";
 
   void login() async {
-    var data = {'email': email, 'password': password};
+    var data = {'id': id, 'email': email, 'password': password};
 
     var res = await Network().authData(data, '/login');
     var body = json.decode(res.body);
 
     print(body);
     if (body['status'] == 1) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Login Berhasil")));
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(content: Text("Login Berhasil"))); //Masuk
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (BuildContext _) => MenuScreen()));
     } else {
       var pesanError = "";
       if (body['reason'] != null) {
