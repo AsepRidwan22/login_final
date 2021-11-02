@@ -2,6 +2,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:login_final/utilities/constants.dart';
 // import 'package:login_final/menu/controller_user.dart';
 // import 'package:login_final/menu/model_user.dart';
 import 'package:login_final/screens/login_screen.dart';
+import 'package:login_final/menu/form/ubah.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -52,19 +54,82 @@ class _MenuScreenState extends State<MenuScreen> {
         title: Text("Home"),
       ),
       body: ListView.builder(
-        itemCount: data.isEmpty ? 0 : data.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: Row(
-              children: [
-                Text(data[index]["name"]),
-                Text(" - "),
-                Text(data[index]["email"]),
-              ],
-            ),
-          );
-        },
-      ),
+          itemCount: data.isEmpty ? 0 : data.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Card(
+              child: Container(
+                height: 100,
+                color: Colors.white,
+                child: Row(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Expanded(
+                          child: CircleAvatar(
+                            child: Text(data[index]['name'][0]),
+                          ),
+                          flex: 2,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: ListTile(
+                                title: Text(data[index]['name']),
+                                subtitle: Text(data[index]['email']),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    child: Text("Ubah"),
+                                    onPressed: () {
+                                      print(data[index]);
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext _) =>
+                                                  UbahScreen(
+                                                      dataEdit: jsonEncode(
+                                                          data[index]))));
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  TextButton(
+                                    child: Text(
+                                      "Hapus",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      flex: 8,
+                    ),
+                  ],
+                ),
+              ),
+              elevation: 8,
+              margin: EdgeInsets.all(10),
+            );
+          }),
     );
   }
 }
